@@ -15,7 +15,11 @@ Ferramenta desenvolvida para facilitar o manejo, conversão e busca de códigos 
 
 ## Interface do Usuário
 
-IMAGEM AQUI
+![IMAGE 2](https://github.com/user-attachments/assets/465ab3d0-9ac6-4d2c-b4e2-acc835f40c6d)
+
+![IMAGE 1](https://github.com/user-attachments/assets/798d136c-4bfe-4067-9793-9a3cdb89479e)
+
+![IMAGE 3](https://github.com/user-attachments/assets/565ce728-3415-4f05-bef5-a1492b1a90d4)
 
 ## Uso
 
