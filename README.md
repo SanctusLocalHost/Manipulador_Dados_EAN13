@@ -1,6 +1,6 @@
 # Manipulador de Dados EAN13
 
-Ferramenta desenvolvida para facilitar o manejo, conversão e busca de códigos EAN13, principalmente voltada para uso em Fábricas e Indústrias. A aplicação fornece uma interface gráfica amigável para conversão de códigos EAN para NX e vice-versa, além de funcionalidades para agrupamento de arquivos de bipagens e localização de itens específicos em arquivos.
+Ferramenta de Automação desenvolvida para facilitar o manejo, conversão e busca de códigos EAN13, principalmente voltada para uso em Fábricas e Indústrias. A aplicação fornece uma interface gráfica facilitada para conversão de códigos EAN para NX e vice-versa, além de funcionalidades para agrupamento de arquivos de bipagens e localização de itens específicos em arquivos.
 
 ## Funcionalidades
 
