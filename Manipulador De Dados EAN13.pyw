@@ -6,6 +6,7 @@ from tkinter import PhotoImage
 from PIL import Image, ImageTk
 import barcode
 from barcode.writer import ImageWriter
+import pyperclip  # Importando pyperclip para usar o clipboard do sistema
 from collections import Counter
 
 # Dicionários de substituição
@@ -265,6 +266,10 @@ substituicoes_ean_para_nx = {
     "7898740472521,1": "NX 252",
     "7898740472538,1": "NX 253",
 	"7898740472545,1": "NX 254",
+    "7898740472552,1": "NX 255",
+    "7898740472569,1": "NX 256",
+    "7898740472576,1": "NX 257",
+    "7898740472583,1": "NX 258",
 	"7894325102432,1": "523402",
     "7894325103644,1": "523437",
     "7894325000110,1": "526033",
@@ -315,26 +320,19 @@ substituicoes_ean_para_nx = {
     "7894325100988,1": "523391E",
 }
 
-
 substituicoes_nx_para_ean = {v.replace(" ", "").lower(): k for k, v in substituicoes_ean_para_nx.items()}
-
 
 def get_most_common_prefix(files):
     if not files:
         return None
 
-    # Encontra o prefixo mais longo comum entre os arquivos
     prefix = os.path.commonprefix(files)
-    # Remove qualquer parte do prefixo que inclua um ponto (.) para evitar cortar no meio de extensões
     prefix = prefix.split('.')[0]
     return prefix
 
-
 def add_final_newline(filepath):
-    # Certifica-se de que o arquivo termine com uma nova linha
     with open(filepath, 'a') as file:
         file.write('\n')
-
 
 def concatenate_files(directory):
     exclude_extensions = ['.exe', '.py', '.pyw', '.jpg', '.jpeg', '.png', '.xls', '.xlsx']
@@ -343,7 +341,7 @@ def concatenate_files(directory):
 
     most_common_prefix = get_most_common_prefix(files)
     if not most_common_prefix:
-        most_common_prefix = "OUTFILE"
+        most_common_prefix = "BIPAGEM"
     output_filename = f"{most_common_prefix}_AGRUPADO.txt"
     output_filepath = os.path.join(directory, output_filename)
 
@@ -366,7 +364,6 @@ def concatenate_files(directory):
     os.replace(output_filepath, os.path.join(output_folder_path, output_filename))
 
     print(f"Arquivos concatenados e pasta '{folder_name}' criada com sucesso em '{output_folder_path}'!")
-
 
 def converter_arquivos(substituicoes, add_spaces=False):
     diretorio = os.path.dirname(os.path.abspath(__file__))
@@ -397,14 +394,11 @@ def converter_arquivos(substituicoes, add_spaces=False):
 
     messagebox.showinfo("Sucesso", "BIPAGENS CONVERTIDAS COM SUCESSO!!!")
 
-
 def converter_ean_para_nx():
     converter_arquivos(substituicoes_ean_para_nx, add_spaces=True)
 
-
 def converter_nx_para_ean():
     converter_arquivos(substituicoes_nx_para_ean)
-
 
 def buscar_termo():
     termo = entry_termo.get().strip()
@@ -437,7 +431,6 @@ def buscar_termo():
     else:
         resultados_text.insert(tk.END, "Nenhum item encontrado.")
 
-
 def buscar(event=None):
     entrada = entry.get().replace(" ", "").lower()
     if entrada in substituicoes_ean_para_nx:
@@ -460,31 +453,25 @@ def buscar(event=None):
         ean_label.config(image=None)
         copy_button.config(state=tk.DISABLED)
 
-
+# Função copiar atualizada usando pyperclip
 def copiar():
     resultado = resultado_label.cget("text")
-    root.clipboard_clear()
-    root.clipboard_append(resultado)
-
+    pyperclip.copy(resultado)  # Copia diretamente para o clipboard do sistema
 
 def generate_ean13_barcode(ean):
     ean = barcode.get_barcode_class('ean13')(ean, writer=ImageWriter())
     barcode_image = ean.render()
     return ImageTk.PhotoImage(barcode_image)
 
-
 root = tk.Tk()
-root.title("Ferramentas de Verificação - Sua Empresa V1.8 STABLE")
+root.title("Ferramentas de Verificação - Rubber_Gatti V2.2 STABLE")
 
-# Estilo para as abas do notebook
 style = ttk.Style()
 style.configure("TNotebook.Tab", font=("Arial", 10, "bold"), padding=[10, 5])
 style.map("TNotebook.Tab", background=[("selected", "lightblue")])
 
-# Estilo para os botões
 style.configure("TButton", font=("Arial", 10), padding=5)
 
-# Estilo para entradas de texto
 entry_style = ttk.Style()
 entry_style.configure("TEntry", font=("Arial", 10))
 
@@ -495,17 +482,31 @@ notebook.pack(pady=10, expand=True)
 frame1 = ttk.Frame(notebook)
 notebook.add(frame1, text="CONVERTER EAN NX")
 
+# Posicionando os botões lado a lado
 btn_convert_ean_nx = ttk.Button(frame1, text="Converter EAN para NX", command=converter_ean_para_nx)
-btn_convert_ean_nx.place(relx=0.5, rely=0.3, anchor='center')
+btn_convert_ean_nx.place(relx=0.35, rely=0.3, anchor='center')
 
 btn_convert_nx_ean = ttk.Button(frame1, text="Converter NX para EAN", command=converter_nx_para_ean)
-btn_convert_nx_ean.place(relx=0.5, rely=0.5, anchor='center')
+btn_convert_nx_ean.place(relx=0.65, rely=0.3, anchor='center')
+
+# Movendo o label "NOVIDADES" para mais acima
+update_label = ttk.Label(frame1, text="NOVIDADES VERSÃO 2.2:", font=("Arial", 10, "bold"))
+update_label.place(relx=0.5, rely=0.45, anchor='center')
+
+update_text = tk.Text(frame1, height=6, width=50, font=("Arial", 8))  # Aumentado em 25% a altura
+update_text.place(relx=0.5, rely=0.6, anchor='center')
+update_text.insert(tk.END, "• TECLAS ENTER FUNCIONAM NA ABA 'LOCALIZAR ITENS'.\n")
+update_text.insert(tk.END, "• COPIAR FUNCIONA MESMO COM O PROGRAMA FECHADO.\n")
+update_text.insert(tk.END, "• ADIÇÃO DA PEÇA NX 257.\n")
+update_text.insert(tk.END, "• ADIÇÃO DA PEÇA NX 258.\n\n")
+update_text.insert(tk.END, "• Sugestões: Breno_Santos. \n\n")
+
+update_text.config(state=tk.DISABLED)  # Torna o campo de texto apenas para leitura
 
 hint_label_ean_nx = ttk.Label(frame1, text="Use esta área para Converter códigos EAN para NX e Vice-versa.",
                               font=("Arial", 8, "italic"))
 hint_label_ean_nx.pack(side='bottom', pady=5)
 
-# Aba de concatenação de arquivos
 frame2 = ttk.Frame(notebook)
 notebook.add(frame2, text="AGRUPAR BIPAGENS")
 
@@ -517,7 +518,6 @@ hint_label_concat = ttk.Label(frame2, text="Use esta área para Agrupar arquivos
                               font=("Arial", 8, "italic"))
 hint_label_concat.pack(side='bottom', pady=5)
 
-# Aba de pesquisa EAN
 frame3 = ttk.Frame(notebook)
 notebook.add(frame3, text="PESQUISAR EAN")
 
@@ -547,7 +547,6 @@ ean_label.pack(pady=10)
 copy_button = ttk.Button(result_frame, text="Copiar Resultado", command=copiar, state=tk.DISABLED)
 copy_button.pack(pady=5)
 
-# Aba de localização de termos
 frame4 = ttk.Frame(notebook)
 notebook.add(frame4, text="LOCALIZAR ITENS")
 
@@ -556,6 +555,10 @@ entry_label.pack(pady=5)
 
 entry_termo = ttk.Entry(frame4, width=50, style="TEntry")
 entry_termo.pack(pady=5)
+
+# Vincula os eventos de tecla Enter tanto para o teclado principal quanto para o numérico
+entry_termo.bind("<Return>", lambda event: buscar_termo())
+entry_termo.bind("<KP_Enter>", lambda event: buscar_termo())
 
 btn_buscar = ttk.Button(frame4, text="Buscar", command=buscar_termo)
 btn_buscar.pack(pady=5)
